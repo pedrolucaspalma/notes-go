@@ -19,6 +19,21 @@ func (s *NoteSequence) MinorChord(note string) ([]Note, error) {
 }
 
 // ====================================== Augmented/Diminished Triads Chords ==============================================
+// Ex Caug C+ (C augmented)
+func (s *NoteSequence) AugmentedChord(note string) ([]Note, error) {
+	// root, major 3rd, augmented 5h
+	intervalsInSemitones := []int{0, 4, 8}
+	notes, err := s.findNoteAndGetNotesFromIntervals(note, intervalsInSemitones)
+	return notes, err
+}
+
+// Ex Cdim Cº (C diminished)
+func (s *NoteSequence) DiminishedChord(note string) ([]Note, error) {
+	// root, minor 3rd, diminished 5th/augmented 4th
+	intervalsInSemitones := []int{0, 3, 6}
+	notes, err := s.findNoteAndGetNotesFromIntervals(note, intervalsInSemitones)
+	return notes, err
+}
 
 // ====================================== 7 Chords ==============================================
 
