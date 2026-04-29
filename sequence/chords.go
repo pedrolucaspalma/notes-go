@@ -39,8 +39,8 @@ func (s *NoteSequence) DiminishedChord(note string) ([]Note, error) {
 
 // Ex C7 (C Dominanth Seventh)
 // The major triad + minor seventh
-func (s *NoteSequence) DominantSeventh(note string) ([]Note, error) {
-	// root, minor 3rd, perfect 5h
+func (s *NoteSequence) DominantSeventhChord(note string) ([]Note, error) {
+	// root, minor 3rd, perfect 5h, minor seventh
 	intervalsInSemitones := []int{0, 4, 7, 10}
 	notes, err := s.findNoteAndGetNotesFromIntervals(note, intervalsInSemitones)
 	return notes, err
@@ -48,8 +48,8 @@ func (s *NoteSequence) DominantSeventh(note string) ([]Note, error) {
 
 // Ex Cmaj7 (C Major Seventh)
 // The major triad + major seventh
-func (s *NoteSequence) MajorSeventh(note string) ([]Note, error) {
-	// root, minor 3rd, perfect 5h
+func (s *NoteSequence) MajorSeventhChord(note string) ([]Note, error) {
+	// root, minor 3rd, perfect 5h, major seventh
 	intervalsInSemitones := []int{0, 4, 7, 11}
 	notes, err := s.findNoteAndGetNotesFromIntervals(note, intervalsInSemitones)
 	return notes, err
@@ -57,9 +57,19 @@ func (s *NoteSequence) MajorSeventh(note string) ([]Note, error) {
 
 // Ex Cmin7 (C Minor Seventh)
 // The minor triad + minor seventh
-func (s *NoteSequence) MinorSeventh(note string) ([]Note, error) {
-	// root, minor 3rd, perfect 5h
+func (s *NoteSequence) MinorSeventhChord(note string) ([]Note, error) {
+	// root, minor 3rd, perfect 5h, minor seventh
 	intervalsInSemitones := []int{0, 3, 7, 10}
+	notes, err := s.findNoteAndGetNotesFromIntervals(note, intervalsInSemitones)
+	return notes, err
+}
+
+// ================================================================================================
+
+// Ex C5 (C power chord)
+func (s *NoteSequence) PowerChord(note string) ([]Note, error) {
+	// root, perfect 5th
+	intervalsInSemitones := []int{0, 7}
 	notes, err := s.findNoteAndGetNotesFromIntervals(note, intervalsInSemitones)
 	return notes, err
 }
