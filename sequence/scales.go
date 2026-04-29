@@ -1,6 +1,9 @@
 package sequence
 
-func (s *NoteSequence) MajorScale(note string) ([]Note, error) {
+// Chromatic
+
+// Ionian
+func (s *NoteSequence) MajorDiatonicScale(note string) ([]Note, error) {
 	// whole, whole, half, whole, whole, whole, half
 	intervalsInSemitones := []int{0, 2, 4, 5, 7, 9, 11, 12}
 	notes, err := s.findNoteAndGetNotesFromIntervals(note, intervalsInSemitones)
@@ -14,8 +17,8 @@ func (s *NoteSequence) MinorScale(note string) ([]Note, error) {
 	return notes, err
 }
 
-func (s *NoteSequence) PentatonicScale(note string) ([]Note, error) {
-	majorNotes, err := s.MajorScale(note)
+func (s *NoteSequence) PentatonicMajorScale(note string) ([]Note, error) {
+	majorNotes, err := s.MajorDiatonicScale(note)
 	if err != nil {
 		return nil, err
 	}
@@ -29,3 +32,15 @@ func (s *NoteSequence) PentatonicScale(note string) ([]Note, error) {
 		majorNotes[5],
 	}, nil
 }
+
+// Lydian
+// Mixolydian
+// Melodic Minor
+// Dorian
+// Phrygian
+// Aeolian
+// Harmonic Minor
+// Pentatonic Minor
+// Whole Tone
+// Diminished
+// Locrian
