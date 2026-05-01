@@ -8,6 +8,8 @@ type colors struct {
 	SILVER_STEEL    string
 	MARBLE          string
 	PASTEL_RED      string
+	PASTEL_YELLOW   string
+	WHITE           string
 }
 
 var COLORS = colors{
@@ -18,6 +20,8 @@ var COLORS = colors{
 	SILVER_STEEL:    "#9BA1AB",
 	MARBLE:          "#e3e0cd",
 	PASTEL_RED:      "#FF746C",
+	PASTEL_YELLOW:   "#FFEE8C",
+	WHITE:           "#FFFFFF",
 }
 
 // ===========================================
