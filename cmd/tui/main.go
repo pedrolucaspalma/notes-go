@@ -7,7 +7,7 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 	"github.com/pedrolucaspalma/notes-go/constants"
-	"github.com/pedrolucaspalma/notes-go/tuicomponents"
+	"github.com/pedrolucaspalma/notes-go/models"
 )
 
 func main() {
@@ -77,11 +77,12 @@ func (m ApplicationModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m ApplicationModel) View() tea.View {
 	var b strings.Builder
 
-	neck, err := tuicomponents.NewGuitarNeck(m.numberOfFretsOnNeck, m.tuning, m.neckDisplayType)
+	neck, err := models.NewGuitarNeck(m.numberOfFretsOnNeck, m.tuning, m.neckDisplayType)
 	if err != nil {
 		panic(err)
 	}
 
-	b.WriteString(neck.String())
+	b.WriteString(neck.View().Content)
+
 	return tea.NewView(b.String())
 }

@@ -1,9 +1,10 @@
-package tuicomponents
+package models
 
 import (
 	"fmt"
 	"strings"
 
+	tea "charm.land/bubbletea/v2"
 	"github.com/pedrolucaspalma/notes-go/constants"
 )
 
@@ -11,6 +12,18 @@ type guitarNeck struct {
 	NeckStrings   []guitarString
 	Tuning        string
 	NumberOfFrets int
+}
+
+func (n guitarNeck) Init() tea.Cmd {
+	return nil
+}
+
+func (n guitarNeck) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	return nil, nil
+}
+
+func (n guitarNeck) View() tea.View {
+	return tea.NewView(n.String())
 }
 
 func NewGuitarNeck(

@@ -1,4 +1,4 @@
-package tuicomponents
+package models
 
 import (
 	"fmt"
