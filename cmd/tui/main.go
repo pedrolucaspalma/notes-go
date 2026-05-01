@@ -123,6 +123,7 @@ func (m ApplicationModel) View() tea.View {
 	b.WriteString(neckView.Content)
 
 	finalView := tea.NewView(b.String())
+	finalView.AltScreen = true
 
 	return finalView
 }
