@@ -87,32 +87,18 @@ func (m ApplicationModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "ctrl+c", "q":
 			return m, tea.Quit
-		case "down":
-			if m.tuning > 0 {
-				m.tuning--
+		case "t":
+			if int(m.tuning) == len(constants.TUNING_DISPLAY_STR_MAP) {
+				m.tuning = 0
 			} else {
-				m.tuning = constants.D_STANDARD_TUNING
-			}
-			cmds = append(cmds, func() tea.Msg { return models.TuningChangedMsg{Tuning: m.tuning} })
-		case "up":
-			if m.tuning < constants.D_STANDARD_TUNING {
 				m.tuning++
-			} else {
-				m.tuning = constants.E_STANDARD_TUNING
 			}
 			cmds = append(cmds, func() tea.Msg { return models.TuningChangedMsg{Tuning: m.tuning} })
-		case "left":
-			if m.neckDisplayType > 0 {
-				m.neckDisplayType--
+		case "f":
+			if int(m.neckDisplayType) == len(constants.NECK_DISPLAY_TYPE_DISPLAY_STR_MAP) {
+				m.neckDisplayType = 0
 			} else {
-				m.neckDisplayType = constants.DISPLAY_NO_ACCIDENTALS
-			}
-			cmds = append(cmds, func() tea.Msg { return models.DisplayTypeChangedMsg{DisplayType: m.neckDisplayType} })
-		case "right":
-			if m.neckDisplayType < constants.DISPLAY_NO_ACCIDENTALS {
 				m.neckDisplayType++
-			} else {
-				m.neckDisplayType = constants.DISPLAY_EMPTY_FRETS
 			}
 			cmds = append(cmds, func() tea.Msg { return models.DisplayTypeChangedMsg{DisplayType: m.neckDisplayType} })
 		}

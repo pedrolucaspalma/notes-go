@@ -50,16 +50,16 @@ func (m Menu) View() tea.View {
 
 	tuningStr := constants.TUNING_DISPLAY_STR_MAP[m.Tuning]
 	tuningLine := lipgloss.JoinHorizontal(lipgloss.Left,
-		titleStyle.Render("Current Tuning: "),
+		titleStyle.Render("Current (T)uning: "),
 		valueStyle.Render(tuningStr),
-		helpStyle.Render(" (↑/↓ to change)"),
+		helpStyle.Render(" (t to change)"),
 	)
 
 	displayStr := constants.NECK_DISPLAY_TYPE_DISPLAY_STR_MAP[m.DisplayType]
 	displayLine := lipgloss.JoinHorizontal(lipgloss.Left,
-		titleStyle.Render("Fret Display:   "),
+		titleStyle.Render("(F)ret Display:   "),
 		valueStyle.Render(displayStr),
-		helpStyle.Render(" (←/→ to change)"),
+		helpStyle.Render(" (f to change)"),
 	)
 
 	b.WriteString(tuningLine + "\n")
