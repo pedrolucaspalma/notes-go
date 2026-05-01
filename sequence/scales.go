@@ -1,6 +1,11 @@
 package sequence
 
 // Chromatic
+func (s *NoteSequence) ChromaticScale(note string) ([]Note, error) {
+	intervalsInSemitones := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}
+	notes, err := s.findNoteAndGetNotesFromIntervals(note, intervalsInSemitones)
+	return notes, err
+}
 
 // Ionian
 func (s *NoteSequence) MajorDiatonicScale(note string) ([]Note, error) {
