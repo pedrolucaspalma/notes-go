@@ -5,14 +5,15 @@ import (
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"github.com/pedrolucaspalma/notes-go/constants"
 )
 
 type GuitarNeck struct {
-	NeckStrings     []guitarString
-	Tuning          constants.Tuning
-	DisplayType     constants.NeckDisplayType
-	NumberOfFrets   int
+	NeckStrings   []guitarString
+	Tuning        constants.Tuning
+	DisplayType   constants.NeckDisplayType
+	NumberOfFrets int
 }
 
 type TuningChangedMsg struct {
@@ -89,9 +90,12 @@ func NewGuitarNeck(
 
 func (n GuitarNeck) String() string {
 	var b strings.Builder
+	nutColor := lipgloss.Color(constants.COMPONENTS_COLORS.NUT)
+	nutChar := lipgloss.NewStyle().Foreground(nutColor).Render("║")
+
 	for _, s := range n.NeckStrings {
 		// open note + nut
-		fmt.Fprintf(&b, "%-2s ║", s.OpenNote)
+		fmt.Fprintf(&b, "%-2s %s", s.OpenNote, nutChar)
 
 		// The rest of the string
 		b.WriteString(s.String())
