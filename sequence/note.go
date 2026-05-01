@@ -1,12 +1,19 @@
 package sequence
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type Note struct {
 	NameSharp string
 	NameFlat  string
 	Next      *Note
 	Previous  *Note
+}
+
+func (n *Note) IsAccidental() bool {
+	return strings.Contains(n.NameFlat, "b") || strings.Contains(n.NameFlat, "#")
 }
 
 func (n *Note) FindFromSemitones(semitonesDistance int) *Note {
