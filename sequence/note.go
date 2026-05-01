@@ -9,6 +9,25 @@ type Note struct {
 	Previous  *Note
 }
 
+func (n *Note) FindFromSemitones(semitonesDistance int) *Note {
+	curr := n
+	for range semitonesDistance {
+		curr = curr.Next
+	}
+	return curr
+}
+
+func (n *Note) GetIntervalInSemitones(note *Note) int {
+	interval := 0
+
+	for {
+		if note.NameFlat == n.NameFlat {
+			return interval
+		}
+		interval++
+	}
+}
+
 func (n *Note) PrintSharpToTerminal() {
 	fmt.Printf("%s\n", n.NameSharp)
 }
