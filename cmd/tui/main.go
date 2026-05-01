@@ -11,7 +11,23 @@ import (
 )
 
 func main() {
+	guitarNeck, err := models.NewGuitarNeck(
+		12,
+		constants.E_STANDARD_TUNING,
+		constants.DISPLAY_EMPTY_FRETS,
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	applicationMenu := models.NewMenuModel()
+
 	p := tea.NewProgram(ApplicationModel{
+		models: applicationSubmodels{
+			guitarNeck: guitarNeck,
+			menu:       applicationMenu,
+		},
+
 		cursorFret:          0,
 		cursorString:        0,
 		numberOfFretsOnNeck: 12,
@@ -25,7 +41,14 @@ func main() {
 	}
 }
 
+type applicationSubmodels struct {
+	guitarNeck models.GuitarNeck
+	menu       models.Menu
+}
+
 type ApplicationModel struct {
+	models applicationSubmodels
+
 	cursorFret          int
 	cursorString        int
 	cursorMenu          int
@@ -39,6 +62,20 @@ func (m ApplicationModel) Init() tea.Cmd {
 }
 
 func (m ApplicationModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	var cmds []tea.Cmd
+
+	updatedNeck, cmd := m.models.guitarNeck.Update(msg)
+	m.models.guitarNeck = updatedNeck.(models.GuitarNeck)
+	if cmd != nil {
+		cmds = append(cmds, cmd)
+	}
+
+	updatedMenu, cmd := m.models.menu.Update(msg)
+	m.models.menu = updatedMenu.(models.Menu)
+	if cmd != nil {
+		cmds = append(cmds, cmd)
+	}
+
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
@@ -48,41 +85,44 @@ func (m ApplicationModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.tuning > 0 {
 				m.tuning--
 			} else {
-				m.tuning = constants.E_STANDARD_TUNING
-			}
-		case "up":
-			if m.tuning < constants.E_STANDARD_TUNING {
-				m.tuning++
-			} else {
 				m.tuning = constants.D_STANDARD_TUNING
 			}
+			cmds = append(cmds, func() tea.Msg { return models.TuningChangedMsg{Tuning: m.tuning} })
+		case "up":
+			if m.tuning < constants.D_STANDARD_TUNING {
+				m.tuning++
+			} else {
+				m.tuning = constants.E_STANDARD_TUNING
+			}
+			cmds = append(cmds, func() tea.Msg { return models.TuningChangedMsg{Tuning: m.tuning} })
 		case "left":
 			if m.neckDisplayType > 0 {
 				m.neckDisplayType--
 			} else {
 				m.neckDisplayType = constants.DISPLAY_NO_ACCIDENTALS
 			}
-
+			cmds = append(cmds, func() tea.Msg { return models.DisplayTypeChangedMsg{DisplayType: m.neckDisplayType} })
 		case "right":
 			if m.neckDisplayType < constants.DISPLAY_NO_ACCIDENTALS {
 				m.neckDisplayType++
 			} else {
 				m.neckDisplayType = constants.DISPLAY_EMPTY_FRETS
 			}
+			cmds = append(cmds, func() tea.Msg { return models.DisplayTypeChangedMsg{DisplayType: m.neckDisplayType} })
 		}
 	}
-	return m, nil
+	return m, tea.Batch(cmds...)
 }
 
 func (m ApplicationModel) View() tea.View {
 	var b strings.Builder
 
-	neck, err := models.NewGuitarNeck(m.numberOfFretsOnNeck, m.tuning, m.neckDisplayType)
-	if err != nil {
-		panic(err)
-	}
+	menuView := m.models.menu.View()
+	neckView := m.models.guitarNeck.View()
+	b.WriteString(menuView.Content)
+	b.WriteString(neckView.Content)
 
-	b.WriteString(neck.View().Content)
+	finalView := tea.NewView(b.String())
 
-	return tea.NewView(b.String())
+	return finalView
 }

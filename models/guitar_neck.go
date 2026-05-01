@@ -8,21 +8,54 @@ import (
 	"github.com/pedrolucaspalma/notes-go/constants"
 )
 
-type guitarNeck struct {
-	NeckStrings   []guitarString
-	Tuning        string
-	NumberOfFrets int
+type GuitarNeck struct {
+	NeckStrings     []guitarString
+	Tuning          constants.Tuning
+	DisplayType     constants.NeckDisplayType
+	NumberOfFrets   int
 }
 
-func (n guitarNeck) Init() tea.Cmd {
+type TuningChangedMsg struct {
+	Tuning constants.Tuning
+}
+
+type DisplayTypeChangedMsg struct {
+	DisplayType constants.NeckDisplayType
+}
+
+func (n GuitarNeck) Init() tea.Cmd {
 	return nil
 }
 
-func (n guitarNeck) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	return nil, nil
+func (n GuitarNeck) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	switch msg := msg.(type) {
+	case TuningChangedMsg:
+		n.Tuning = msg.Tuning
+		n.rebuildStrings()
+	case DisplayTypeChangedMsg:
+		n.DisplayType = msg.DisplayType
+		n.rebuildStrings()
+	}
+	return n, nil
 }
 
-func (n guitarNeck) View() tea.View {
+func (n *GuitarNeck) rebuildStrings() {
+	neckStrings := []guitarString{}
+	openNotes := getTuning(n.Tuning)
+	for _, note := range openNotes {
+		guitarString, err := NewGuitarString(
+			note,
+			n.NumberOfFrets,
+			n.DisplayType,
+		)
+		if err == nil {
+			neckStrings = append(neckStrings, guitarString)
+		}
+	}
+	n.NeckStrings = neckStrings
+}
+
+func (n GuitarNeck) View() tea.View {
 	return tea.NewView(n.String())
 }
 
@@ -30,7 +63,7 @@ func NewGuitarNeck(
 	fretNums int,
 	tuning constants.Tuning,
 	neckDisplayType constants.NeckDisplayType,
-) (guitarNeck, error) {
+) (GuitarNeck, error) {
 	neckStrings := []guitarString{}
 
 	openNotes := getTuning(tuning)
@@ -41,18 +74,20 @@ func NewGuitarNeck(
 			neckDisplayType,
 		)
 		if err != nil {
-			return guitarNeck{}, fmt.Errorf("creating guitar string: %w", err)
+			return GuitarNeck{}, fmt.Errorf("creating guitar string: %w", err)
 		}
 		neckStrings = append(neckStrings, guitarString)
 	}
 
-	return guitarNeck{
+	return GuitarNeck{
 		NeckStrings:   neckStrings,
 		NumberOfFrets: fretNums,
+		Tuning:        tuning,
+		DisplayType:   neckDisplayType,
 	}, nil
 }
 
-func (n guitarNeck) String() string {
+func (n GuitarNeck) String() string {
 	var b strings.Builder
 	for _, s := range n.NeckStrings {
 		// open note + nut
