@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"os"
-	"strings"
 
 	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"github.com/pedrolucaspalma/notes-go/constants"
 	"github.com/pedrolucaspalma/notes-go/models"
 )
@@ -49,6 +49,9 @@ type applicationSubmodels struct {
 type ApplicationModel struct {
 	models applicationSubmodels
 
+	width  int
+	height int
+
 	cursorFret          int
 	cursorString        int
 	cursorMenu          int
@@ -77,6 +80,9 @@ func (m ApplicationModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	switch msg := msg.(type) {
+	case tea.WindowSizeMsg:
+		m.width = msg.Width
+		m.height = msg.Height
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "ctrl+c", "q":
@@ -115,14 +121,33 @@ func (m ApplicationModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m ApplicationModel) View() tea.View {
-	var b strings.Builder
-
 	menuView := m.models.menu.View()
 	neckView := m.models.guitarNeck.View()
-	b.WriteString(menuView.Content)
-	b.WriteString(neckView.Content)
 
-	finalView := tea.NewView(b.String())
+	content := lipgloss.JoinVertical(
+		lipgloss.Center,
+		menuView.Content,
+		"", // spacing
+		neckView.Content,
+	)
+
+	appStyle := lipgloss.NewStyle().
+		Border(lipgloss.RoundedBorder()).
+		BorderForeground(lipgloss.Color(constants.COMPONENTS_COLORS.BORDER)).
+		Padding(1, 4)
+
+	rendered := appStyle.Render(content)
+
+	// Center horizontally and vertically
+	centered := lipgloss.Place(
+		m.width,
+		m.height,
+		lipgloss.Center,
+		lipgloss.Center,
+		rendered,
+	)
+
+	finalView := tea.NewView(centered)
 	finalView.AltScreen = true
 
 	return finalView

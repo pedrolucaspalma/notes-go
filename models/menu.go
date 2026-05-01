@@ -1,10 +1,10 @@
 package models
 
 import (
-	"fmt"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"github.com/pedrolucaspalma/notes-go/constants"
 )
 
@@ -59,8 +59,31 @@ func (m Menu) View() tea.View {
 		displayStr = "Natural Notes Only"
 	}
 
-	b.WriteString(fmt.Sprintf("Current Tuning: %s (↑/↓ to change)\n", tuningStr))
-	b.WriteString(fmt.Sprintf("Fret Display: %s (←/→ to change)\n", displayStr))
+	titleStyle := lipgloss.NewStyle().
+		Bold(true).
+		Foreground(lipgloss.Color(constants.COLORS.PINK))
+
+	valueStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color(constants.COMPONENTS_COLORS.VALUE_TEXT))
+
+	helpStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color(constants.COLORS.DARK_BLACK_GRAY)).
+		Italic(true)
+
+	tuningLine := lipgloss.JoinHorizontal(lipgloss.Left,
+		titleStyle.Render("Current Tuning: "),
+		valueStyle.Render(tuningStr),
+		helpStyle.Render(" (↑/↓ to change)"),
+	)
+
+	displayLine := lipgloss.JoinHorizontal(lipgloss.Left,
+		titleStyle.Render("Fret Display:   "),
+		valueStyle.Render(displayStr),
+		helpStyle.Render(" (←/→ to change)"),
+	)
+
+	b.WriteString(tuningLine + "\n")
+	b.WriteString(displayLine + "\n")
 	b.WriteString(strings.Repeat("-", 40) + "\n\n")
 
 	return tea.NewView(b.String())
