@@ -5,6 +5,9 @@ type colors struct {
 	CYAN            string
 	PINK            string
 	DARK_BLACK_GRAY string
+	SILVER_STEEL    string
+	MARBLE          string
+	PASTEL_RED      string
 }
 
 var COLORS = colors{
@@ -12,6 +15,9 @@ var COLORS = colors{
 	CYAN:            "#5fffd7",
 	PINK:            "#ff5faf",
 	DARK_BLACK_GRAY: "#626262",
+	SILVER_STEEL:    "#9BA1AB",
+	MARBLE:          "#e3e0cd",
+	PASTEL_RED:      "#FF746C",
 }
 
 // ===========================================
@@ -21,12 +27,20 @@ type componentsColors struct {
 	VALUE_TEXT string
 	TITLE_TEXT string
 	HELP_TEXT  string
+	NOTE_TEXT  string
+
+	STRING string
+	NUT    string
 }
 
 var COMPONENTS_COLORS = componentsColors{
 	BORDER:     COLORS.PURPLE,
 	VALUE_TEXT: COLORS.CYAN,
 	HELP_TEXT:  COLORS.DARK_BLACK_GRAY,
+	NOTE_TEXT:  COLORS.PASTEL_RED,
+
+	STRING: COLORS.SILVER_STEEL,
+	NUT:    COLORS.MARBLE,
 }
 
 // ===========================================
