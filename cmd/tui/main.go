@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/pedrolucaspalma/notes-go/constants"
 	"github.com/pedrolucaspalma/notes-go/tuicomponents"
 )
@@ -74,7 +74,7 @@ func (m ApplicationModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-func (m ApplicationModel) View() string {
+func (m ApplicationModel) View() tea.View {
 	var b strings.Builder
 
 	neck, err := tuicomponents.NewGuitarNeck(m.numberOfFretsOnNeck, m.tuning, m.neckDisplayType)
@@ -83,5 +83,5 @@ func (m ApplicationModel) View() string {
 	}
 
 	b.WriteString(neck.String())
-	return b.String()
+	return tea.NewView(b.String())
 }
