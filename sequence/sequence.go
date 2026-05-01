@@ -74,15 +74,15 @@ func (s *NoteSequence) chromatic(start *Note) iter.Seq[*Note] {
 	}
 }
 
-func (s *NoteSequence) find(note string) *Note {
+func (s *NoteSequence) Find(note string) (*Note, error) {
 	note = strings.ToLower(note)
 
 	for curr := range s.chromatic(s.first) {
 		if strings.ToLower(curr.NameFlat) == note || strings.ToLower(curr.NameSharp) == note {
-			return curr
+			return curr, nil
 		}
 	}
-	return nil
+	return nil, NOTE_NOT_FOUND_ERROR
 }
 
 func (s *NoteSequence) getNotesFromIntervals(root *Note, intervalsInSemitones []int) []Note {
@@ -100,9 +100,9 @@ func (s *NoteSequence) getNotesFromIntervals(root *Note, intervalsInSemitones []
 }
 
 func (s *NoteSequence) findNoteAndGetNotesFromIntervals(note string, intervals []int) ([]Note, error) {
-	root := s.find(note)
-	if root == nil {
-		return nil, NOTE_NOT_FOUND_ERROR
+	root, err := s.Find(note)
+	if err != nil {
+		return nil, fmt.Errorf("finding root note: %w", err)
 	}
 	notes := s.getNotesFromIntervals(root, intervals)
 	return notes, nil
