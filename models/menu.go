@@ -37,28 +37,6 @@ func (m Menu) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m Menu) View() tea.View {
 	var b strings.Builder
 
-	tuningStr := ""
-	switch m.Tuning {
-	case constants.E_STANDARD_TUNING:
-		tuningStr = "E Standard"
-	case constants.DROP_D_TUNING:
-		tuningStr = "Drop D"
-	case constants.D_STANDARD_TUNING:
-		tuningStr = "D Standard"
-	}
-
-	displayStr := ""
-	switch m.DisplayType {
-	case constants.DISPLAY_EMPTY_FRETS:
-		displayStr = "Empty Frets"
-	case constants.DISPLAY_ALL_NOTES_AS_SHARP:
-		displayStr = "Sharps"
-	case constants.DISPLAY_ALL_NOTES_AS_FLAT:
-		displayStr = "Flats"
-	case constants.DISPLAY_NO_ACCIDENTALS:
-		displayStr = "Natural Notes Only"
-	}
-
 	titleStyle := lipgloss.NewStyle().
 		Bold(true).
 		Foreground(lipgloss.Color(constants.COLORS.PINK))
@@ -70,12 +48,14 @@ func (m Menu) View() tea.View {
 		Foreground(lipgloss.Color(constants.COLORS.DARK_BLACK_GRAY)).
 		Italic(true)
 
+	tuningStr := constants.TUNING_DISPLAY_STR_MAP[m.Tuning]
 	tuningLine := lipgloss.JoinHorizontal(lipgloss.Left,
 		titleStyle.Render("Current Tuning: "),
 		valueStyle.Render(tuningStr),
 		helpStyle.Render(" (↑/↓ to change)"),
 	)
 
+	displayStr := constants.NECK_DISPLAY_TYPE_DISPLAY_STR_MAP[m.DisplayType]
 	displayLine := lipgloss.JoinHorizontal(lipgloss.Left,
 		titleStyle.Render("Fret Display:   "),
 		valueStyle.Render(displayStr),
