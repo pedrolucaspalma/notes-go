@@ -1,16 +1,23 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
 	"github.com/pedrolucaspalma/notes-go/constants"
+	"github.com/pedrolucaspalma/notes-go/logging"
 	"github.com/pedrolucaspalma/notes-go/models"
 )
 
 func main() {
+	logger, err := logging.NewLogger()
+	if err != nil {
+		panic(err)
+	}
+
 	guitarNeck, err := models.NewGuitarNeck(
 		12,
 		constants.E_STANDARD_TUNING,
@@ -27,6 +34,8 @@ func main() {
 			guitarNeck: guitarNeck,
 			menu:       applicationMenu,
 		},
+
+		logger: logger,
 
 		cursorFret:          0,
 		cursorString:        0,
@@ -48,6 +57,7 @@ type applicationSubmodels struct {
 
 type ApplicationModel struct {
 	models applicationSubmodels
+	logger *logging.AppLogger
 
 	width  int
 	height int
@@ -66,6 +76,14 @@ func (m ApplicationModel) Init() tea.Cmd {
 
 func (m ApplicationModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmds []tea.Cmd
+
+	ctx := context.Background()
+
+	m.logger.Debug(
+		ctx, "current model state",
+		"tuning", m.tuning,
+		"neckDisplayType", m.neckDisplayType,
+	)
 
 	updatedNeck, cmd := m.models.guitarNeck.Update(msg)
 	m.models.guitarNeck = updatedNeck.(models.GuitarNeck)
@@ -88,14 +106,18 @@ func (m ApplicationModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "ctrl+c", "q":
 			return m, tea.Quit
 		case "t":
-			if int(m.tuning) == len(constants.TUNING_DISPLAY_STR_MAP) {
+			m.logger.Debug(
+				ctx, "tuning change request message received",
+				"current", m.tuning,
+			)
+			if int(m.tuning) == len(constants.TUNING_DISPLAY_STR_MAP)-1 {
 				m.tuning = 0
 			} else {
 				m.tuning++
 			}
 			cmds = append(cmds, func() tea.Msg { return models.TuningChangedMsg{Tuning: m.tuning} })
 		case "f":
-			if int(m.neckDisplayType) == len(constants.NECK_DISPLAY_TYPE_DISPLAY_STR_MAP) {
+			if int(m.neckDisplayType) == len(constants.NECK_DISPLAY_TYPE_DISPLAY_STR_MAP)-1 {
 				m.neckDisplayType = 0
 			} else {
 				m.neckDisplayType++
