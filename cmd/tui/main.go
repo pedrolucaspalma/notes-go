@@ -110,14 +110,14 @@ func (m ApplicationModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				ctx, "tuning change request message received",
 				"current", m.tuning,
 			)
-			if int(m.tuning) == len(constants.TUNING_DISPLAY_STR_MAP)-1 {
+			if m.tuning.HasRotatedAllTypes() {
 				m.tuning = 0
 			} else {
 				m.tuning++
 			}
 			cmds = append(cmds, func() tea.Msg { return models.TuningChangedMsg{Tuning: m.tuning} })
 		case "f":
-			if int(m.neckDisplayType) == len(constants.NECK_DISPLAY_TYPE_DISPLAY_STR_MAP)-1 {
+			if m.tuning.HasRotatedAllTypes() {
 				m.neckDisplayType = 0
 			} else {
 				m.neckDisplayType++

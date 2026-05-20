@@ -2,6 +2,10 @@ package constants
 
 type Tuning int
 
+func (t Tuning) HasRotatedAllTypes() bool {
+	return int(t) == len(TUNING_DISPLAY_STR_MAP)-1
+}
+
 const (
 	E_STANDARD_TUNING Tuning = iota
 	DROP_D_TUNING
@@ -17,6 +21,10 @@ var TUNING_DISPLAY_STR_MAP = map[Tuning]string{
 // ===========================================
 
 type NeckDisplayType int
+
+func (n NeckDisplayType) HasRotatedAllTypes() bool {
+	return int(n) == len(NECK_DISPLAY_TYPE_DISPLAY_STR_MAP)-1
+}
 
 const (
 	DISPLAY_EMPTY_FRETS NeckDisplayType = iota
